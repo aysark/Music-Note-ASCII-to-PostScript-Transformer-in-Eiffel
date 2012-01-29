@@ -1,0 +1,5 @@
+Compiler version: 7.0.8.8074 GPL Edition - win64
+Type: Quick_melt
+batch mode: False
+new session: True
+starting date: 01/28/2012 7:26:12.891 PM
