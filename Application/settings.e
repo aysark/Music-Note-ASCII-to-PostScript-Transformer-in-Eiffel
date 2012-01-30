@@ -1,27 +1,27 @@
 note
-	description: "Summary description for {SETTINGS}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Configuration settings for the TAB2PS class"
+	author: "Aysar Khalid"
+	date: "28.1.2012"
+	version: "1.0"
 
 class
 	SETTINGS
 
 create make
 
-feature -- init
+feature -- Initialization
 	 left_margin : INTEGER
 	 spacing : REAL
 	 page_width : INTEGER
 
 	 make
-	 do
+	 do -- setting default values
 	 	spacing := 4.0
 	 	left_margin := 35
 	 	page_width := 600
 	 end
 
-feature --setters
+feature -- Setters
 	set_left_margin(lm:INTEGER)
 	do
 		left_margin:= lm
@@ -36,6 +36,4 @@ feature --setters
 	do
 		page_width:= pw
 	end
-
-
 end

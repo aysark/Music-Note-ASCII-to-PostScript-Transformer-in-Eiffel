@@ -1,7 +1,7 @@
 note
   description: "Objects that transform tablature input to PostScript"
   author: "Aysar Khalid"
-  date: "???"
+  date: "28.1.2012"
   version: "1.0"
 
 class TAB2PS
@@ -22,21 +22,16 @@ execute
 local
     doc : STRING
     output_lines : INTEGER
-    -- file io
     output : PLAIN_TEXT_FILE
     input : PLAIN_TEXT_FILE
-    internal : ARRAY[CHARACTER]
     i,j,t : INTEGER
     repeat_flag : BOOLEAN
   do
   		create pslib
   		create config.make
-		--io.putstring ("Reading file...%N")
 
 		create input.make_open_read(input_filename)
 		create output.make_open_write(output_filename)
-		create internal.make(1,1000)
-
 
 		from input.start ; input.read_line ; i := 0; j:=0
         until input.last_string.is_empty
@@ -57,6 +52,7 @@ local
         output_lines := 0+ i
         doc := pslib.preamble (input_title,input_subtitle,config.left_margin)
 
+        -- iterates through each music line
         from input.read_line ; i := 0
         until input.off
         loop
@@ -66,7 +62,8 @@ local
 
             repeat_flag := false
 
-
+            -- iterates through the whole current line checking and calling the necessary
+            -- PS_LIB commands on each corresponding character
             from j := 1
             until j = input.last_string.count
             loop
@@ -92,7 +89,7 @@ local
 
             end
 
-            doc := doc+pslib.move_to_next_line
+            --doc := doc+"%N"
           end
 
           i := i + 1
@@ -106,10 +103,9 @@ local
 		doc := doc + pslib.trailer (output_lines)
 		output.put_string (doc)
         output.close
-        --io.putstring ("Wrote to output file...%N")
   end
 
-feature {NONE} -- implementation
+feature {NONE} -- Implementation
 
 is_command(line: STRING): BOOLEAN
     -- checks if a given line has one of the settings or is just a value for one of them
@@ -117,8 +113,6 @@ is_command(line: STRING): BOOLEAN
     -- returns true if the line does contain one of the above
   do
     if (line.has ('=')) then
-    	--starts checking at 4 because thats the min. length of the string variable name
-    	--out of all the others, which is TITLE
     	Result := true
     else
     	Result := false
@@ -126,7 +120,8 @@ is_command(line: STRING): BOOLEAN
   end
 
 set_command(line: STRING; setting_id : INTEGER)
-    -- checks if a given line has one of the settings or is just a value for one of them
+    -- sets the command give its id and value
+    -- command being either of: title, subtitle, spacing, left_margin, or page_width
   local
   	line_length  : INTEGER
   do
